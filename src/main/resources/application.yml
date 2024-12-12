@@ -1,0 +1,31 @@
+server:
+  port: 7777
+spring:
+  application:
+    name: wx-server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wx?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  rocket-api:
+    base-register-path: /interface-ui
+    service-title: 数据开放平台
+
+    sql-model:
+      find-one-suffix: /first
+      pager-suffix: /page
+      count-suffix: /count
+wx:
+  appId: wx039c1700fb366e40
+  appSecret: 186b3124cc321ba48b20fa5cce5e74f5
+  loginUrl: https://api.weixin.qq.com/sns/jscode2session
+
+jwt:
+  secretKey: wxminiappsecretkey
+  expirationTime: 3600000
