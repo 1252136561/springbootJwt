@@ -3,7 +3,6 @@ package com.hbw.x.controller;
 
 import com.hbw.x.service.WxLoginService;
 import com.hbw.x.util.ApiResult;
-import jakarta.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

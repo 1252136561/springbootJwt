@@ -1,6 +1,6 @@
 package com.hbw.x.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
@@ -22,10 +22,6 @@ public class User {
       @Column(name = "session_key")
       private String sessionKey;
 
-      public String getSessionKey() {
-            return sessionKey;
-      }
-
       @Override
       public String toString() {
             return "User{" +
@@ -35,18 +31,6 @@ public class User {
                     ", openId='" + openId + '\'' +
                     ", sessionKey='" + sessionKey + '\'' +
                     '}';
-      }
-
-      public void setSessionKey(String sessionKey) {
-            this.sessionKey = sessionKey;
-      }
-
-      public String getOpenId() {
-            return openId;
-      }
-
-      public void setOpenId(String openId) {
-            this.openId = openId;
       }
 
       public Integer getId() {
@@ -72,5 +56,23 @@ public class User {
       public void setPassword(String password) {
             this.password = password;
       }
+
+      public String getOpenId() {
+            return openId;
+      }
+
+      public void setOpenId(String openId) {
+            this.openId = openId;
+      }
+
+      public String getSessionKey() {
+            return sessionKey;
+      }
+
+      public void setSessionKey(String sessionKey) {
+            this.sessionKey = sessionKey;
+      }
+
+
 
 }
