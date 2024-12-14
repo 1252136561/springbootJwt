@@ -42,7 +42,7 @@ public class WxLoginController {
             } catch (Exception e) {
                   result = ApiResult.newInstance("999","wok出错了！",null);
 
-                  log.error("/test 异常",e);
+                  log.error("/refresh 异常",e);
             }
 
             return result;
