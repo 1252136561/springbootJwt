@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     // 添加自定义的JwtAuthenticationFilter
                     .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .authorizeRequests()
-                    .antMatchers("/wxlogin").permitAll() // 开发微信登录接口，不需要认证
+                    .antMatchers("/refresh","/wxlogin").permitAll() // 开发微信登录接口，不需要认证
                     .anyRequest().authenticated();
       }
 }

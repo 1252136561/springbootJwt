@@ -3,6 +3,7 @@ package com.hbw.x.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hbw.x.dao.UserDao;
 import com.hbw.x.dto.WxResponse;
 import com.hbw.x.entity.User;
@@ -46,8 +47,32 @@ public class WxLoginServiceImpl implements WxLoginService {
             return all.toString();
       }
 
+
       @Override
-      public String wxLogin(Map<String, String> req) {
+      public JSONObject refresh(Map<String, String> req) {
+            JSONObject r = new JSONObject();
+            if (StringUtils.isEmpty(req.get("refreshToken"))) {
+                  r.put("error","refreshToken is null");
+                  return r;
+            }
+            User u = userRepository.findByOpenId(req.get("refreshToken"));
+
+            if (u == null){
+                  r.put("errpr","该用户未授权");
+                  return r;
+            }
+
+            String t = JwtUtil.generateToken(u.getOpenId());
+
+            r.put("accessToken",u.getOpenId());
+            r.put("token",t);
+
+
+            return r;
+      }
+
+      @Override
+      public JSONObject wxLogin(Map<String, String> req) {
             String code = req.get("code");
 
             String url = wxLoginUrl + "?appid=" + appId + "&secret=" + appSecret + "&js_code=" + code + "&grant_type=authorization_code";
@@ -69,7 +94,7 @@ public class WxLoginServiceImpl implements WxLoginService {
             WxResponse wxResponse = parseWxResponse(responseBody);
 
             if (StringUtils.isEmpty(wxResponse.getOpenid())){
-                  wxResponse.setOpenid("errOaForWx");
+                  wxResponse.setOpenid("errOAForWx");
                   log.warn("wxOA failed,  err:[{}]",wxResponse.toString());
 
 
@@ -84,7 +109,7 @@ public class WxLoginServiceImpl implements WxLoginService {
             if (user == null) {
                   // 如果没有，创建一个新的用户
                   user = new User();
-
+                  user.setUserName(code);
                   user.setOpenId(wxResponse.getOpenid());
 
             }
@@ -98,13 +123,18 @@ public class WxLoginServiceImpl implements WxLoginService {
 
             log.info("token:[{}]",tok);
 
+            JSONObject r = new JSONObject();
+            r.put("accessToken", user.getOpenId());
+            r.put("token",tok);
+
+
 
             //  1.会话密钥 session_key 是对用户数据进行 加密签名 的密钥。
             //  为了应用自身的数据安全，开发者服务器不应该把会话密钥下发到小程序，也不应该对外提供这个密钥。
             //  2.临时登录凭证 code 只能使用一次，5分钟未被使用自动过期。
             //  根据用户的openId生成token返回给前端
 
-            return tok;
+            return r;
       }
 
       private WxResponse parseWxResponse(String responseBody) {

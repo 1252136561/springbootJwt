@@ -26,9 +26,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //                  throw new RuntimeException("Invalid JWT token");
 //            }
             if (header != null ) {
-                  String token = header;
+                  String t = header;
                   try {
-                        Claims claims = JwtUtil.parseToken(token);
+                        Claims claims = JwtUtil.parseToken(t);
                         if (claims.getExpiration().before(new Date())) { // 判断token是否过期
                               throw new RuntimeException("Token expired");
                         }
@@ -36,6 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         Authentication authentication = new JwtAuthenticationToken(claims);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                   } catch (ExpiredJwtException e) {
+                       logger.error("oa token err",e);
                         throw new RuntimeException("Token expired");
                   }
             }

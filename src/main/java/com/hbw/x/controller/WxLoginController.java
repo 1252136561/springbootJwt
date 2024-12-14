@@ -34,6 +34,21 @@ public class WxLoginController {
             return result;
       }
 
+      @PostMapping("/refresh")
+      public ApiResult refresh(@RequestBody Map<String,String> req)throws Exception {
+            ApiResult result = null;
+            try {
+                  result = ApiResult.newInstance("200","",wxLoginService.refresh(req));
+            } catch (Exception e) {
+                  result = ApiResult.newInstance("999","wok出错了！",null);
+
+                  log.error("/test 异常",e);
+            }
+
+            return result;
+      }
+
+
       @PostMapping("/wxlogin")
       public ApiResult wxLogin(@RequestBody Map<String, String> req) {
             ApiResult result = null;
