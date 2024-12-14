@@ -1,4 +1,4 @@
-FROM java:8
+FROM openJdk:8
 
 COPY *.jar /app.jar
 
