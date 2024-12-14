@@ -3,8 +3,8 @@ package com.hbw.x.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hbw.x.dao.UserDao;
+import com.hbw.x.dto.WxResponse;
 import com.hbw.x.entity.User;
 import com.hbw.x.service.WxLoginService;
 import com.hbw.x.util.JwtUtil;
@@ -17,9 +17,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,21 +66,31 @@ public class WxLoginServiceImpl implements WxLoginService {
             log.info("wx-response:[{}]",responseBody);
 
             //提取openid和session_key
-            Map<String, String> wxResponse = parseWxResponse(responseBody);
-            String openid = wxResponse.get("openid");
-            String session_key = wxResponse.get("session_key");
+            WxResponse wxResponse = parseWxResponse(responseBody);
+
+            if (StringUtils.isEmpty(wxResponse.getOpenid())){
+                  wxResponse.setOpenid("errOaForWx");
+                  log.warn("wxOA failed,  err:[{}]",wxResponse.toString());
+
+
+//                  return null;
+
+            }
+
 
             // 检查数据库中是否已经有一个与这个openid关联的用户
-            User user = userRepository.findByOpenId(openid);
+            User user = userRepository.findByOpenId(wxResponse.getOpenid());
+
             if (user == null) {
                   // 如果没有，创建一个新的用户
                   user = new User();
-                  user.setOpenId(openid);
-                  user.setPassword("123");
+
+                  user.setOpenId(wxResponse.getOpenid());
+
             }
 
             // 更新用户的session_key
-            user.setSessionKey(session_key);
+            user.setSessionKey(wxResponse.getSession_key());
 
             // 保存用户
             User save = userRepository.save(user);
@@ -97,12 +107,10 @@ public class WxLoginServiceImpl implements WxLoginService {
             return tok;
       }
 
-      private Map<String, String> parseWxResponse(String responseBody) {
-            Map<String, String> wxResponse = new HashMap<>();
-            JSONObject jsonObject = JSON.parseObject(responseBody);
-            wxResponse.put("openid", jsonObject.getString("openid"));
-            wxResponse.put("session_key", jsonObject.getString("session_key"));
-            return wxResponse;
+      private WxResponse parseWxResponse(String responseBody) {
+            WxResponse o = JSON.parseObject(responseBody,WxResponse.class);
+
+            return o;
       }
 }
 
