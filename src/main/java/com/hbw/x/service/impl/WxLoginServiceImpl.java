@@ -41,6 +41,7 @@ public class WxLoginServiceImpl implements WxLoginService {
 
       @Override
       public String testSelect(Map<String, String> req) {
+            log.info("req:[{}]",req.toString());
             List<User> all = userRepository.findAll();
             return all.toString();
       }

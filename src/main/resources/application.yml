@@ -5,13 +5,16 @@ spring:
     name: wx-server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wx?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://150.158.76.28:13306/wx?useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: root
+    password: Hh123123
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
 
   rocket-api:
     base-register-path: /interface-ui

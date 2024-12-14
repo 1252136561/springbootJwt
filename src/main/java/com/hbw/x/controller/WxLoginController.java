@@ -21,7 +21,7 @@ public class WxLoginController {
       public ApiResult test(@RequestBody Map<String, String> req)throws Exception {
             ApiResult result = null;
             try {
-                  result = ApiResult.newInstance("T", null, null, wxLoginService.testSelect(req).toString());
+                  result = ApiResult.newInstance("T", null, null, wxLoginService.testSelect(req));
             } catch (Exception e) {
                   result = ApiResult.newInstance("F", null, null, e.getMessage());
 
